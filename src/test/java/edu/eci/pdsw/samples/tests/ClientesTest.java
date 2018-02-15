@@ -9,10 +9,24 @@ import edu.eci.pdsw.samples.services.ExcepcionServiciosAlquiler;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import edu.eci.pdsw.samples.entities.Cliente;
 
 /**
- *
+ * Diseno de pruebas:
  * 
+ *      void registrarCliente(Cliente p)
+ * 
+ * Clases de equivalencia:
+ *  
+ *      CE1: Descripción: Registrar un cliente con un documento ya existente
+ *           Resultado esperado: "El cliente ya se encuentra registrado"
+ *          
+ *      CE2: Descripción: Registrar un cliente con un documento < 0
+ *           Resultado esperado: "Documento no valido"
+ * 
+ *      CE3: Descripción: Registrar un cliente con un documento no numerico
+ *           Resultado esperado:  "Tipo de documento no valido"
+ *  
  */
 public class ClientesTest {
 
@@ -25,8 +39,8 @@ public class ClientesTest {
     
   
     @Test
-    public void additems1() throws ExcepcionServiciosAlquiler{
-    	
+    public void CE1() throws ExcepcionServiciosAlquiler{
+    	//Cliente c = new 
     }
     
     
