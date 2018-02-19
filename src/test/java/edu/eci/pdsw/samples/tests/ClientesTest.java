@@ -32,8 +32,8 @@ import java.util.List;
  *  
  * Clases de frontera:
  * 
- *      CF1: Descripcion: Registrar dos clientes alquilando el mismo item
- *           Resultado esperado: "Item alquilado por dos clientes"
+ *      CF1: Descripcion: Registrar dos o mas clientes alquilando el mismo item
+ *           Resultado esperado: "Item alquilado por dos o maa clientes"
  */
 public class ClientesTest {
 
@@ -47,11 +47,15 @@ public class ClientesTest {
   
     @Test
     public void CE2() throws ExcepcionServiciosAlquiler{
-        ServiciosAlquiler sa=ServiciosAlquilerItemsStub.getInstance();
-        
-        sa.registrarCliente(new Cliente("Camilo Gomez", -1036182560, "2781942", "KRA 43#17-a60", "camigo@hotmail.com"));
-        List<Cliente> cli = sa.consultarClientes();
-        assertTrue("Documento no valido", cli.get(0).getDocumento() < 0);
+        try {
+            ServiciosAlquiler sa = ServiciosAlquilerItemsStub.getInstance();
+
+            sa.registrarCliente(new Cliente("Camilo Gomez", -1036182560, "2781942", "KRA 43#17-a60", "camigo@hotmail.com"));
+            List<Cliente> cli = sa.consultarClientes();
+            assertTrue(cli.get(0).getDocumento() < 0);
+        } catch (ExcepcionServiciosAlquiler ex) {
+            throw new ExcepcionServiciosAlquiler("Documento no valido");
+        }
     }
     
     
