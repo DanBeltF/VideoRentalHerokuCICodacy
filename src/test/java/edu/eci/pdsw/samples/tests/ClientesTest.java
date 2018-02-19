@@ -10,6 +10,9 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import edu.eci.pdsw.samples.entities.Cliente;
+import edu.eci.pdsw.samples.services.ServiciosAlquiler;
+import edu.eci.pdsw.samples.services.ServiciosAlquilerItemsStub;
+import java.util.List;
 
 /**
  * Diseno de pruebas:
@@ -18,15 +21,19 @@ import edu.eci.pdsw.samples.entities.Cliente;
  * 
  * Clases de equivalencia:
  *  
- *      CE1: Descripción: Registrar un cliente con un documento ya existente
- *           Resultado esperado: "El cliente ya se encuentra registrado"
+ *      CE1: Descripcion: Registrar un cliente con un documento ya existente
+ *           Resultado esperado: "El cliente con documento ya esta registrado"
  *          
- *      CE2: Descripción: Registrar un cliente con un documento < 0
+ *      CE2: Descripcion: Registrar un cliente con un documento < 0
  *           Resultado esperado: "Documento no valido"
  * 
- *      CE3: Descripción: Registrar un cliente con un documento no numerico
+ *      CE3: Descripcion: Registrar un cliente con un documento no numerico
  *           Resultado esperado:  "Tipo de documento no valido"
  *  
+ * Clases de frontera:
+ * 
+ *      CF1: Descripcion: Registrar dos clientes alquilando el mismo item
+ *           Resultado esperado: "Item alquilado por dos clientes"
  */
 public class ClientesTest {
 
@@ -39,8 +46,12 @@ public class ClientesTest {
     
   
     @Test
-    public void CE1() throws ExcepcionServiciosAlquiler{
-    	//Cliente c = new 
+    public void CE2() throws ExcepcionServiciosAlquiler{
+        ServiciosAlquiler sa=ServiciosAlquilerItemsStub.getInstance();
+        
+        sa.registrarCliente(new Cliente("Camilo Gomez", -1036182560, "2781942", "KRA 43#17-a60", "camigo@hotmail.com"));
+        List<Cliente> cli = sa.consultarClientes();
+        assertTrue("Documento no valido", cli.get(0).getDocumento() < 0);
     }
     
     
