@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -48,6 +50,9 @@ public class ServiciosAlquilerItemsStub extends ServiciosAlquiler implements Ser
         if(clientes.containsKey(docu)){
             c=clientes.get(docu);
         }
+        else{
+            throw new ExcepcionServiciosAlquiler("Cliente no registrado:"+docu);
+        }  
         return c;
     }
 
@@ -118,6 +123,9 @@ public class ServiciosAlquilerItemsStub extends ServiciosAlquiler implements Ser
         TipoItem i = null;
         if(!tipositems.containsKey(id)){
             i=tipositems.get(id);
+        }
+        else {
+            throw new ExcepcionServiciosAlquiler("El tipo de item con id: " + id + " no esta registrado.");
         }
         return i;
         
