@@ -16,7 +16,6 @@ import edu.eci.pdsw.samples.entities.TipoItem;
 import edu.eci.pdsw.samples.services.ServiciosAlquiler;
 import edu.eci.pdsw.samples.services.ServiciosAlquilerItemsStub;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Diseno de pruebas:
@@ -72,14 +71,10 @@ public class ClientesTest {
     
     @Test
     public void CE3() throws ExcepcionServiciosAlquiler{
-        try{
-            ServiciosAlquiler sa = ServiciosAlquilerItemsStub.getInstance();
-            Cliente c = new Cliente("123123124",  1432629611, "2781942", "KRA 43#17-a60", "camigo@hotmail.com");
-            sa.registrarCliente(c);
-        } catch (IllegalArgumentException e){
-            throw new ExcepcionServiciosAlquiler("Tipo de nombre no valido",e.getCause());
-        }
-        
+        ServiciosAlquiler sa = ServiciosAlquilerItemsStub.getInstance();
+        Cliente c = new Cliente("1a3d23ff24", 1432629611, "2781942", "KRA 43#17-a60", "camigo@hotmail.com");
+        sa.registrarCliente(c);
+        assertTrue("Tipo de nombre no valido", c.getNombre().matches(".*[^\\s][0-9]+.*"));
     }
     
     @Test
@@ -106,9 +101,7 @@ public class ClientesTest {
         sa.registrarAlquilerCliente(java.sql.Date.valueOf("2017-01-01"), c1.getDocumento(), i1, 4);
         sa.registrarAlquilerCliente(java.sql.Date.valueOf("2017-01-01"), c2.getDocumento(), i1, 4);
         
-        assertEquals("Item alquilado por dos o maa clientes al mismo tiempo",c1.getRentados().get(0),c2.getRentados().get(0));
+        assertEquals("Item alquilado por dos o maa clientes al mismo tiempo", c1.getRentados().get(0),c2.getRentados().get(0));
     }
-    
-    
     
 }

@@ -12,10 +12,10 @@ import java.util.List;
  * @author 2106913
  */
 public abstract class ServiciosAlquiler {
-
+    
     private static ServiciosAlquiler instance = new ServiciosAlquilerItemsStub();
-
-
+    
+    
     public static ServiciosAlquiler getInstance() throws RuntimeException {
         return instance;
     }
