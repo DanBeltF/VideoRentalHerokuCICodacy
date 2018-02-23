@@ -214,12 +214,8 @@ public class ServiciosAlquilerItemsStub extends ServiciosAlquiler implements Ser
     public long consultarCostoAlquiler(int iditem, int numdias) throws ExcepcionServiciosAlquiler {
         if (!itemsDisponibles.containsKey(iditem)) {
             throw new ExcepcionServiciosAlquiler("El item " + iditem + " no esta disponible.");
-        } else if(numdias <= 0){
-            return 0;
-        }
-        
-        else {
-            return itemsDisponibles.get(iditem).getTarifaxDia()*numdias;
+        } else {
+            return itemsDisponibles.containsKey(iditem) && numdias > 0 ? itemsDisponibles.get(iditem).getTarifaxDia()*numdias : 0;
         }
 
     }

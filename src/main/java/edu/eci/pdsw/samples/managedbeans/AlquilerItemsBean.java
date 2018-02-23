@@ -25,6 +25,15 @@ public class AlquilerItemsBean implements Serializable {
     
     private Cliente cliente;
     private Cliente nuevoCliente;
+    private Cliente seleccionCliente;
+
+    public Cliente getSeleccionCliente() {
+        return seleccionCliente;
+    }
+
+    public void setSeleccionCliente(Cliente seleccionCliente) {
+        this.seleccionCliente = seleccionCliente;
+    }
     
     public AlquilerItemsBean() {
         nuevoCliente = new Cliente();

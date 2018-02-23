@@ -47,7 +47,7 @@ public class ClientesTest {
     public void setUp() {
     }
     
-    
+
     @Test(expected = ExcepcionServiciosAlquiler.class)
     public void CE1() throws ExcepcionServiciosAlquiler{
         ServiciosAlquiler sa = ServiciosAlquilerItemsStub.getInstance();
@@ -72,6 +72,7 @@ public class ClientesTest {
     @Test
     public void CE3() throws ExcepcionServiciosAlquiler{
         ServiciosAlquiler sa = ServiciosAlquilerItemsStub.getInstance();
+        
         Cliente c = new Cliente("1a3d23ff24", 1432629611, "2781942", "KRA 43#17-a60", "camigo@hotmail.com");
         sa.registrarCliente(c);
         assertTrue("Tipo de nombre no valido", c.getNombre().matches(".*[^\\s][0-9]+.*"));

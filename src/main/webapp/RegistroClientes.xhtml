@@ -8,7 +8,7 @@
     </h:head>
     <h:body>
         <h:form>
-            <p:dataTable id="dtClientes" var="c" value="#{AlquilerItems.consultarClientes}" >
+            <p:dataTable id="dtClientes" var="c" value="#{AlquilerItems.consultarClientes}" selectionMode="single" selection="#{AlquilerItems.seleccionCliente}" rowKey="#{c.documento}" >
                 <f:facet name="header">
                     Clientes
                 </f:facet>
@@ -31,9 +31,12 @@
 
                 <p:column headerText="Email">
                     <h:outputText value="#{c.email}" />
-                </p:column>                        
+                </p:column>
+                
+                <f:facet name="footer">
+                    <p:commandButton action="RegistroClienteItem" icon="ui-icon-search" value="View"/>
+                </f:facet>
             </p:dataTable>
-            
             <br/>
             <br/>
             <br/>
@@ -57,11 +60,8 @@
 
                     </h:panelGrid>
                 </p:panel>
-
             </center>
             <br/>
-           
-
             <center>
             <p:commandButton value="Registrar cliente" update="dtClientes" actionListener="#{AlquilerItems.registrarNuevoCliente}" resetValues="True" icon="ui-icon-circle-arrow-e"/>
             </center>
