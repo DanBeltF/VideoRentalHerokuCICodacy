@@ -34,7 +34,7 @@
                 </p:column>
                 
                 <f:facet name="footer">
-                    <p:commandButton action="RegistroClienteItem" icon="ui-icon-search" value="View"/>
+                    <p:commandButton action="RegistroClienteItem" icon=" ui-icon-circle-zoomout" value="Ver"/>
                 </f:facet>
             </p:dataTable>
             <br/>
@@ -63,7 +63,7 @@
             </center>
             <br/>
             <center>
-            <p:commandButton value="Registrar cliente" update="dtClientes" actionListener="#{AlquilerItems.registrarNuevoCliente}" resetValues="True" icon="ui-icon-circle-arrow-e"/>
+                <p:commandButton value="Registrar cliente" update="dtClientes" actionListener="#{AlquilerItems.registrarNuevoCliente}" resetValues="True" icon="ui-icon-circle-check"/>
             </center>
         </h:form>
     </h:body>
