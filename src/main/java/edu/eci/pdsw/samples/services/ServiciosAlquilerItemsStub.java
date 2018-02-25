@@ -212,11 +212,16 @@ public class ServiciosAlquilerItemsStub extends ServiciosAlquiler implements Ser
     
     @Override
     public long consultarCostoAlquiler(int iditem, int numdias) throws ExcepcionServiciosAlquiler {
+        long res;
         if (!itemsDisponibles.containsKey(iditem)) {
             throw new ExcepcionServiciosAlquiler("El item " + iditem + " no esta disponible.");
-        } else {
-            return itemsDisponibles.containsKey(iditem) && numdias > 0 ? itemsDisponibles.get(iditem).getTarifaxDia()*numdias : 0;
+        } else if(numdias<=0){
+            res= 0;
         }
+        else {
+            res = itemsDisponibles.get(iditem).getTarifaxDia()*numdias;
+        }
+        return res;
 
     }
     
@@ -240,10 +245,7 @@ public class ServiciosAlquilerItemsStub extends ServiciosAlquiler implements Ser
     public int valorMultaRetrasoxDia() {
         return MULTA_DIARIA;
     }
-
-    
-    
-    
+        
     
     private void poblar() throws ExcepcionServiciosAlquiler {
         

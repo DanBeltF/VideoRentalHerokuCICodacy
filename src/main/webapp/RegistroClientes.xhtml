@@ -4,11 +4,11 @@
       xmlns:p="http://primefaces.org/ui" 
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
-        <title>Videotienda</title>
+        <title>Clientes</title>
     </h:head>
     <h:body>
-        <h:form>
-            <p:dataTable id="dtClientes" var="c" value="#{AlquilerItems.consultarClientes}" selectionMode="single" selection="#{AlquilerItems.seleccionCliente}" rowKey="#{c.documento}" >
+        <h:form id="Clientes">
+            <p:dataTable id="dtClientes" var="c" value="#{AlquilerItems.consultarClientes}" selectionMode="single" selection="#{AlquilerItems.seleccionCliente}" rowKey="#{c.documento}" rowIndexVar="row" >
                 <f:facet name="header">
                     Clientes
                 </f:facet>
@@ -34,7 +34,7 @@
                 </p:column>
                 
                 <f:facet name="footer">
-                    <p:commandButton action="RegistroClienteItem" icon=" ui-icon-circle-zoomout" value="Ver"/>
+                    <p:commandButton update=":Clientes:dtClientes,:Clientes:panel" action="RegistroClienteItem" icon=" ui-icon-circle-zoomout" value="Ver"/>
                 </f:facet>
             </p:dataTable>
             <br/>
@@ -57,13 +57,12 @@
 
                         <p:outputLabel value="Email:" />
                         <p:inputText  value="#{AlquilerItems.nuevoCliente.email}"></p:inputText>
-
                     </h:panelGrid>
                 </p:panel>
             </center>
             <br/>
             <center>
-                <p:commandButton value="Registrar cliente" update="dtClientes" actionListener="#{AlquilerItems.registrarNuevoCliente}" resetValues="True" icon="ui-icon-circle-check"/>
+                <p:commandButton type="submit" value="Registrar cliente" update="Clientes" actionListener="#{AlquilerItems.registrarNuevoCliente}" resetValues="True" icon="ui-icon-circle-check"/>
             </center>
         </h:form>
     </h:body>

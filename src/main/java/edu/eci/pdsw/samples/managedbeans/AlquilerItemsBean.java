@@ -12,6 +12,7 @@ import edu.eci.pdsw.samples.services.ExcepcionServiciosAlquiler;
 import edu.eci.pdsw.samples.services.ServiciosAlquiler;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -32,17 +33,12 @@ public class AlquilerItemsBean implements Serializable {
     private int dias;
     private long costo;
 
-    public Cliente getSeleccionCliente() {
-        return seleccionCliente;
-    }
-
-    public void setSeleccionCliente(Cliente seleccionCliente) {
-        this.seleccionCliente = seleccionCliente;
-    }
-    
     public AlquilerItemsBean() {
         nuevoCliente = new Cliente();
         seleccionCliente = new Cliente();
+        codigo = 0;
+        dias = 0;
+        costo = 0;
     }
 
     public Cliente getNuevoCliente() {
@@ -52,44 +48,13 @@ public class AlquilerItemsBean implements Serializable {
     public void setNuevoCliente(Cliente nuevoCliente) {
         this.nuevoCliente = nuevoCliente;
     }
-    
-    public List<Cliente> getConsultarClientes() throws ExcepcionServiciosAlquiler{
-        return sp.consultarClientes();
-    }
-    
-    public List<ItemRentado> getConsultarItemsCliente() throws ExcepcionServiciosAlquiler {
-        return sp.consultarItemsCliente(seleccionCliente.getDocumento());
-    }
-    
-    public List<Item> getConsultarItemsDisponibles() throws ExcepcionServiciosAlquiler{
-        return sp.consultarItemsDisponibles();
-    }
-    
-    public long getConsultarMultaAlquiler() throws ExcepcionServiciosAlquiler{
-        long total = 0;
-        List<ItemRentado> lista = seleccionCliente.getRentados();
-        if (lista.size() > 0) {
-            for (int i = 0; i < lista.size(); i++) {
-                total += sp.consultarMultaAlquiler(lista.get(i).getItem().getId(), java.sql.Date.valueOf(LocalDate.now()));
-            }
-        }
-        return total;
-    }
-    
-    public void consultarCostoAlquiler() throws ExcepcionServiciosAlquiler {
-        if (codigo > 0) {
-            costo = sp.consultarCostoAlquiler(codigo, dias);
-        }
+
+    public Cliente getSeleccionCliente() {
+        return seleccionCliente;
     }
 
-    public void registrarAlquiler() throws ExcepcionServiciosAlquiler{
-        if (codigo > 0) {
-            Item nuevoItem = sp.consultarItem(codigo);
-            sp.registrarAlquilerCliente(java.sql.Date.valueOf(LocalDate.now()), seleccionCliente.getDocumento(), nuevoItem, dias);
-            dias=0;
-            codigo=0;
-        }
-
+    public void setSeleccionCliente(Cliente seleccionCliente) {
+        this.seleccionCliente = seleccionCliente;
     }
 
     public int getCodigo() {
@@ -114,6 +79,45 @@ public class AlquilerItemsBean implements Serializable {
 
     public void setCosto(long costo) {
         this.costo = costo;
+    }
+    
+    public List<Cliente> getConsultarClientes() throws ExcepcionServiciosAlquiler{
+        return sp.consultarClientes();
+    }
+    
+    public List<ItemRentado> getConsultarItemsCliente() throws ExcepcionServiciosAlquiler {
+        return sp.consultarItemsCliente(seleccionCliente.getDocumento());
+    }
+    
+    public List<Item> getConsultarItemsDisponibles() throws ExcepcionServiciosAlquiler{
+        return sp.consultarItemsDisponibles();
+    }
+    
+    public long getConsultarMultaAlquiler() throws ExcepcionServiciosAlquiler{
+        long total = 0;
+        List<ItemRentado> lista = seleccionCliente.getRentados();
+        if (lista.size() > 0 && lista != null) {
+            for (int i = 0; i < lista.size(); i++) {
+                total += sp.consultarMultaAlquiler(lista.get(i).getItem().getId(), java.sql.Date.valueOf(LocalDate.now()));
+            }
+        }
+        return total;
+    }
+    
+    public void consultarCostoAlquiler() throws ExcepcionServiciosAlquiler {
+        if (codigo > 0) {
+            setCosto(sp.consultarCostoAlquiler(codigo, dias));
+        }
+    }
+
+    public void registrarAlquiler() throws ExcepcionServiciosAlquiler{
+        if (codigo > 0) {
+            Item nuevoItem = sp.consultarItem(codigo);
+            sp.registrarAlquilerCliente(java.sql.Date.valueOf(LocalDate.now()), seleccionCliente.getDocumento(), nuevoItem, dias);
+            setDias(0);
+            setCodigo(0);
+        }
+
     }
     
     public void registrarNuevoCliente() throws ExcepcionServiciosAlquiler {

@@ -2,68 +2,98 @@
 <html xmlns="http://www.w3c.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui" xmlns:f="http://xmlns.jcp.org/jsf/core">
-    <h:head></h:head>
-
+    <h:head>
+        <title>Items</title>
+    </h:head>
     <h:body>
-        <h:form>
-            <p:dataTable id="dtClientes" var="c" value="#{AlquilerItems.consultarClientes}" selectionMode="single" selection="#{AlquilerItems.seleccionCliente}" rowKey="#{c.documento}" >
+        <h:form id="ItemsClientes">
+            <p:dataTable id="dtItems" var="i" value="#{AlquilerItems.consultarItemsCliente}">
                 <f:facet name="header">
-                    Clientes
+                    Items Rentados
                 </f:facet>
-                
+
                 <p:column headerText="Id">
-                    <h:outputText value="#{c.documento}" />
+                    <h:outputText value="#{i.item.id}" />
                 </p:column>
 
                 <p:column headerText="Nombre">
-                    <h:outputText value="#{c.nombre}" />
+                    <h:outputText value="#{i.item.nombre}" />
                 </p:column>
 
-                <p:column headerText="Telefono">
-                    <h:outputText value="#{c.telefono}" />
+                <p:column headerText="Tipo">
+                    <h:outputText value="#{i.item.tipo.descripcion}" />
                 </p:column>
 
-                <p:column headerText="Direccion">
-                    <h:outputText value="#{c.direccion}" />
+                <p:column headerText="Fecha inicio de renta">
+                    <h:outputText value="#{i.fechainiciorenta}" />
                 </p:column>
 
-                <p:column headerText="Email">
-                    <h:outputText value="#{c.email}" />
+                <p:column headerText="Fecha fin de renta">
+                    <h:outputText value="#{i.fechafinrenta}" />
                 </p:column>
-                
+
+                <p:column headerText="Tarifa x dia">
+                    <h:outputText value="#{i.item.tarifaxDia}" />
+                </p:column>
+
                 <f:facet name="footer">
-                    <p:commandButton action="RegistroClienteItem" icon=" ui-icon-circle-zoomout" value="Ver"/>
+                    <h:outputText style="color:red" value="Multa: $#{AlquilerItems.consultarMultaAlquiler}" />
                 </f:facet>
             </p:dataTable>
             <br/>
             <br/>
             <br/>
             <center>
-                <p:panel id="panel" header="Registrar Cliente" >
-                    <h:panelGrid columns="2" cellpadding="2">
-                        <p:outputLabel value="Documento:" />
-                        <p:inputText  value="#{AlquilerItems.nuevoCliente.documento}"></p:inputText>
+                <p:panel id="panelAlquiler" header="Rentar un Item">
+                    <br/>
+                    <p:dataTable id="dtItemsD" var="idi"  value="#{AlquilerItems.consultarItemsDisponibles}" style="text-align: center">
+                        <f:facet name="header">
+                            <h:outputText style="color: blue" value="Items disponibles" />
+                        </f:facet>
+
+                        <p:column headerText="Id">
+                            <h:outputText value="#{idi.id}"/>
+                        </p:column>
+
+                        <p:column headerText="Nombre">
+                            <h:outputText value="#{idi.nombre}" />
+                        </p:column>
+
+                        <p:column headerText="Tipo">
+                            <h:outputText value="#{idi.tipo.descripcion}" />
+                        </p:column>
+
+                        <p:column headerText="Genero">
+                            <h:outputText value="#{idi.genero}" />
+                        </p:column>
+
+                        <p:column headerText="Formato">
+                            <h:outputText value="#{idi.formatoRenta}" />
+                        </p:column>
                         
-                        <p:outputLabel value="Nombre:" />
-                        <p:inputText  value="#{AlquilerItems.nuevoCliente.nombre}"></p:inputText>
+                        <p:column headerText="Tarifa x dia">
+                            <h:outputText value="#{idi.tarifaxDia}" />
+                        </p:column>
+                    </p:dataTable>
+                    <br/>
+                    <h:panelGrid columns="2" cellpadding="3">
+                        <p:outputLabel value="Codigo del Item:" />
+                        <p:inputText  value="#{AlquilerItems.codigo}" ></p:inputText>
 
-                        <p:outputLabel value="Telefono:" />
-                        <p:inputText  value="#{AlquilerItems.nuevoCliente.telefono}"></p:inputText>
+                        <p:outputLabel value="Num. dias del alquiler:" />
+                        <p:inputText  value="#{AlquilerItems.dias}" ></p:inputText>
 
-                        <p:outputLabel value="Direccion:" />
-                        <p:inputText  value="#{AlquilerItems.nuevoCliente.direccion}"></p:inputText>
-
-                        <p:outputLabel value="Email:" />
-                        <p:inputText  value="#{AlquilerItems.nuevoCliente.email}"></p:inputText>
-
+                        <p:commandButton value="Calcular alquiler" update="costo" actionListener="#{AlquilerItems.consultarCostoAlquiler}" icon="ui-icon-calculator"/>
+                        <p:outputLabel id="costo" value="$#{AlquilerItems.costo}" style="color: green"/>
+                    </h:panelGrid>
+                    <br/>
+                    <h:panelGrid columns="2" cellpadding="3">
+                        <p:commandButton value="Registrar alquiler" update="panelAlquiler,dtItems" actionListener="#{AlquilerItems.registrarAlquiler}" icon="ui-icon-circle-check"/>
+                        <p:commandButton value="Volver a clientes"  update="ItemsClientes" action="RegistroClientes" icon="ui-icon-arrowreturnthick-1-w"/>
                     </h:panelGrid>
                 </p:panel>
-            </center>
-            <br/>
-            <center>
-                <p:commandButton value="Registrar cliente" update="dtClientes" actionListener="#{AlquilerItems.registrarNuevoCliente}" resetValues="True" icon="ui-icon-circle-check"/>
+                <br/>
             </center>
         </h:form>
     </h:body>
-
 </html>
