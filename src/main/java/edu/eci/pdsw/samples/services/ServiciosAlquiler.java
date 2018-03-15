@@ -11,19 +11,10 @@ import java.util.List;
  *
  * @author 2106913
  */
-public abstract class ServiciosAlquiler {
-    
-    private static ServiciosAlquiler instance = new ServiciosAlquilerItemsStub();
-    
-    
-    public static ServiciosAlquiler getInstance() throws RuntimeException {
-        return instance;
-    }
-    protected ServiciosAlquiler() {
-        
-    }
+public interface ServiciosAlquiler {
 
-    public abstract int valorMultaRetrasoxDia();
+    
+    public abstract int valorMultaRetrasoxDia(int itemId);
     
     public abstract Cliente consultarCliente(long docu) throws ExcepcionServiciosAlquiler;
 
@@ -63,37 +54,20 @@ public abstract class ServiciosAlquiler {
     public abstract List<TipoItem> consultarTiposItem() throws ExcepcionServiciosAlquiler;
 
     /**
-     * @obj registrar el alquiler de un item
+     * @obj rejistrar el alkiler de un item
      * @pre numdias >=1
-     * @param date fecha de registro del alquiler
+     * @param date fecha de rejistro del alquiler
      * @param docu identificacion de a quien se le cargara el alquiler
      * @param item el identificador del item a alquilar
      * @param numdias el numero de dias que se le prestara el item
      * @pos el item ya no debe estar disponible, y debe estar asignado al
      * cliente
-     * @throws ExcepcionServiciosAlquiler si el identificador no corresponde con un item, o si
+     * @throws ExcepcionXX si el identificador no corresponde con un item, o si
      * el mismo ya esta alquilado
      */
     public abstract void registrarAlquilerCliente(Date date, long docu, Item item, int numdias) throws ExcepcionServiciosAlquiler;
-    
-    /**
-     * @obj registrar un cliente en el sistema
-     * @param p el nuevo cliente
-     * @pre p!=null
-     * @pos el cliente queda disponible para futuros alquileres
-     * @throws ExcepcionServiciosAlquiler si el cliente ya se encuentra registrado
-     */
-    public abstract void registrarCliente(Cliente p) throws ExcepcionServiciosAlquiler;
 
-    /**
-     * @obj registrar la devolucion de un item
-     * @param iditem el item a regresar
-     * @pos el item se enuentra disponible para el alquiler y el usuario ya no
-     * lo tiene dentro de sus elementos rentados
-     * @throws ExcepcionServiciosAlquiler si el item no existe o no se encuentra
-     * alquilado
-     */
-    public abstract void registrarDevolucion(int iditem) throws ExcepcionServiciosAlquiler;
+    public abstract void registrarCliente(Cliente p) throws ExcepcionServiciosAlquiler;
 
     /**
      * @obj consultar el costo del alquiler de un item

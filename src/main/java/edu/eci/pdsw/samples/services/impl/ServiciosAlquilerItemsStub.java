@@ -1,9 +1,11 @@
-package edu.eci.pdsw.samples.services;
+package edu.eci.pdsw.samples.services.impl;
 
 import edu.eci.pdsw.samples.entities.Cliente;
 import edu.eci.pdsw.samples.entities.Item;
 import edu.eci.pdsw.samples.entities.ItemRentado;
 import edu.eci.pdsw.samples.entities.TipoItem;
+import edu.eci.pdsw.samples.services.ExcepcionServiciosAlquiler;
+import edu.eci.pdsw.samples.services.ServiciosAlquiler;
 
 import java.io.Serializable;
 import java.sql.Date;
@@ -14,14 +16,12 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
  * @author 2106913
  */
-public class ServiciosAlquilerItemsStub extends ServiciosAlquiler implements Serializable{
+public class ServiciosAlquilerItemsStub implements ServiciosAlquiler {
     
     private static final int MULTA_DIARIA=5000;
     private final static long MILLISECONDS_IN_DAY = 24 * 60 * 60 * 1000;
@@ -35,19 +35,18 @@ public class ServiciosAlquilerItemsStub extends ServiciosAlquiler implements Ser
     private final Map<Integer,Long> mapaPrestamosPorIdCliente;
     
    
-    public ServiciosAlquilerItemsStub(){
+    public ServiciosAlquilerItemsStub() {
         clientes = new HashMap<>();
         itemsDisponibles = new HashMap<>();
         itemsrentados = new HashMap<>();
         tipositems = new HashMap<>();
         mapaPrestamosPorIdCliente=new HashMap<>();
-        try {
-            poblar();
-        } catch (ExcepcionServiciosAlquiler ex) {
-            Logger.getLogger(ServiciosAlquilerItemsStub.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        
+        //poblar();
+    }
+
+    @Override
+    public int valorMultaRetrasoxDia(int itemId) {
+        return MULTA_DIARIA;
     }
 
     @Override
@@ -56,9 +55,6 @@ public class ServiciosAlquilerItemsStub extends ServiciosAlquiler implements Ser
         if(clientes.containsKey(docu)){
             c=clientes.get(docu);
         }
-        //else{
-          //  throw new ExcepcionServiciosAlquiler("Cliente no registrado:"+docu);
-        //}  
         return c;
     }
 
@@ -130,9 +126,6 @@ public class ServiciosAlquilerItemsStub extends ServiciosAlquiler implements Ser
         if(!tipositems.containsKey(id)){
             i=tipositems.get(id);
         }
-        //else {
-          //  throw new ExcepcionServiciosAlquiler("El tipo de item con id " + id + " no esta registrado.");
-        //}
         return i;
         
     }
@@ -149,7 +142,7 @@ public class ServiciosAlquilerItemsStub extends ServiciosAlquiler implements Ser
         LocalDate ld=date.toLocalDate();
         LocalDate ld2=ld.plusDays(numdias);
         
-        ItemRentado ir=new ItemRentado(item,date,java.sql.Date.valueOf(ld2));
+        ItemRentado ir=new ItemRentado(0,item,date,java.sql.Date.valueOf(ld2));
 
         if (clientes.containsKey(docu)) {
             Cliente c = clientes.get(docu);
@@ -205,54 +198,27 @@ public class ServiciosAlquilerItemsStub extends ServiciosAlquiler implements Ser
             LocalDate fechaMinimaEntrega=ir.getFechafinrenta().toLocalDate();
             LocalDate fechaEntrega=fechaDevolucion.toLocalDate();
             long diasRetraso = ChronoUnit.DAYS.between(fechaMinimaEntrega, fechaEntrega);
-            return diasRetraso>=0 ? diasRetraso*MULTA_DIARIA :0;
+            return diasRetraso*MULTA_DIARIA;
         }
     }
 
     
     @Override
     public long consultarCostoAlquiler(int iditem, int numdias) throws ExcepcionServiciosAlquiler {
-        long res;
         if (!itemsDisponibles.containsKey(iditem)) {
             throw new ExcepcionServiciosAlquiler("El item " + iditem + " no esta disponible.");
-        } else if(numdias<=0){
-            res= 0;
-        }
-        else {
-            res = itemsDisponibles.get(iditem).getTarifaxDia()*numdias;
-        }
-        return res;
-
-    }
-    
-    
-    @Override
-    public void registrarDevolucion(int iditem) throws ExcepcionServiciosAlquiler{
-        if (!itemsrentados.containsKey(iditem)) {
-            throw new ExcepcionServiciosAlquiler("El item " + iditem + "no esta en alquiler");
         } else {
-            
-            ItemRentado ir=itemsrentados.get(iditem);
-            itemsDisponibles.put(ir.getItem().getId(), ir.getItem());
-            itemsrentados.remove(iditem);            
-            Cliente c=consultarClienteConItem(iditem);
-            c.getRentados().remove(ir);
-            mapaPrestamosPorIdCliente.remove(iditem);
+            return itemsDisponibles.get(iditem).getTarifaxDia()*numdias;
         }
-    }
 
-    @Override
-    public int valorMultaRetrasoxDia() {
-        return MULTA_DIARIA;
     }
-        
     
-    private void poblar() throws ExcepcionServiciosAlquiler {
+    
+    private void poblar() {
         
         TipoItem ti1=new TipoItem(1,"Video");
         TipoItem ti2=new TipoItem(2,"Juego");
         TipoItem ti3=new TipoItem(3,"Musica");
-        
         tipositems.put(1,ti1);
         tipositems.put(2,ti2);
         tipositems.put(3,ti3);
@@ -264,49 +230,33 @@ public class ServiciosAlquilerItemsStub extends ServiciosAlquiler implements Ser
         Item i4=new Item(ti1, 4, "Los 4 Fantasticos", "Los 4 Fantásticos  es una película de superhéroes  basada en la serie de cómic homónima de Marvel.", java.sql.Date.valueOf("2005-06-08"), 2000, "DVD", "Ciencia Ficcion");
         Item i5=new Item(ti2, 5, "Halo 3", "Halo 3 es un videojuego de disparos en primera persona desarrollado por Bungie Studios.", java.sql.Date.valueOf("2007-09-08"), 3000, "DVD", "Shooter");
         Item i6=new Item(ti3, 6, "Thriller", "Thriller es una canción interpretada por el cantante estadounidense Michael Jackson, compuesta por Rod Temperton y producida por Quincy Jones.", java.sql.Date.valueOf("1984-01-11"), 2000, "DVD", "Pop");
-        
-        registrarItem(i1);
-        registrarItem(i2);
-        registrarItem(i3);
-        registrarItem(i4);
-        registrarItem(i5);
-        registrarItem(i6);
-        
         //items.put(1, i1);
         //items.put(2, i2);
         //items.put(3, i3);
-        //itemsDisponibles.put(4, i4);
-        //itemsDisponibles.put(5, i5);
-        //itemsDisponibles.put(6, i6);
+        itemsDisponibles.put(4, i4);
+        itemsDisponibles.put(5, i5);
+        itemsDisponibles.put(6, i6);
         
         
-        //ItemRentado ir1=new ItemRentado(i1, java.sql.Date.valueOf("2017-01-01"), java.sql.Date.valueOf("2017-03-12"));
-        //ItemRentado ir2=new ItemRentado(i2, java.sql.Date.valueOf("2017-01-04"), java.sql.Date.valueOf("2017-04-7"));
-        //ItemRentado ir3=new ItemRentado(i1, java.sql.Date.valueOf("2017-01-07"), java.sql.Date.valueOf("2017-07-12"));
+        ItemRentado ir1=new ItemRentado(0,i1, java.sql.Date.valueOf("2017-01-01"), java.sql.Date.valueOf("2017-03-12"));
+        ItemRentado ir2=new ItemRentado(0,i2, java.sql.Date.valueOf("2017-01-04"), java.sql.Date.valueOf("2017-04-7"));
+        ItemRentado ir3=new ItemRentado(0,i1, java.sql.Date.valueOf("2017-01-07"), java.sql.Date.valueOf("2017-07-12"));
         
-        //ArrayList<ItemRentado> list1 = new ArrayList<>();
-        //list1.add(ir1);
-        //ArrayList<ItemRentado> list2 = new ArrayList<>();
-        //list2.add(ir2);
-        //ArrayList<ItemRentado> list3 = new ArrayList<>();
-        //list3.add(ir3);
+        ArrayList<ItemRentado> list1 = new ArrayList<>();
+        list1.add(ir1);
+        ArrayList<ItemRentado> list2 = new ArrayList<>();
+        list2.add(ir2);
+        ArrayList<ItemRentado> list3 = new ArrayList<>();
+        list3.add(ir3);
 
         
-        Cliente c1=new Cliente("Oscar Alba", 1026585664, "6788952", "KRA 109#34-C30", "oscar@hotmail.com");
-        Cliente c2=new Cliente("Carlos Ramirez", 1026585663, "6584562", "KRA 59#27-a22", "carlos@hotmail.com");
-        Cliente c3=new Cliente("Ricardo Pinto", 1026585669, "4457863", "KRA 103#94-a77", "ricardo@hotmail.com");
-        
-        registrarCliente(c1);
-        registrarCliente(c2);
-        registrarCliente(c3);
-        
-        //clientes.put(c1.getDocumento(), c1);
-        //clientes.put(c2.getDocumento(), c2);
-        //clientes.put(c3.getDocumento(), c3);
+        Cliente c1=new Cliente("Oscar Alba", 1026585664, "6788952", "KRA 109#34-C30", "oscar@hotmail.com", false,list1);
+        Cliente c2=new Cliente("Carlos Ramirez", 1026585663, "6584562", "KRA 59#27-a22", "carlos@hotmail.com", false,list2);
+        Cliente c3=new Cliente("Ricardo Pinto", 1026585669, "4457863", "KRA 103#94-a77", "ricardo@hotmail.com", false,list3);
+        clientes.put(c1.getDocumento(), c1);
+        clientes.put(c2.getDocumento(), c2);
+        clientes.put(c3.getDocumento(), c3);
 
-        registrarAlquilerCliente(java.sql.Date.valueOf("2017-01-01"), c1.getDocumento(), i1, 93);
-        registrarAlquilerCliente(java.sql.Date.valueOf("2017-01-04"), c2.getDocumento(), i2, 70);
-        registrarAlquilerCliente(java.sql.Date.valueOf("2017-01-07"), c3.getDocumento(), i5, 186);
     }
 
 
